@@ -1,4 +1,6 @@
-﻿namespace Practice2
+﻿using Practice2;
+
+namespace Practice2
 {
     class Scooter : Vehicle
     {
@@ -17,3 +19,5 @@
 
     }
 }
+
+

@@ -17,9 +17,9 @@
             city.RegisterTaxi("0003 CCC");
 
             // introducimos coches de policía (algunos con radar y otros sin radar)
-            PoliceCar policeCar1 = new PoliceCar("0001 CNP", comisaria);
-            PoliceCar policeCar2 = new PoliceCar("0002 CNP", comisaria);
-            PoliceCar policeCar3 = new PoliceCar("0003 CNP", comisaria, null); 
+            PoliceCar policeCar1 = new PoliceCar("0001 CNP", comisaria, true);
+            PoliceCar policeCar2 = new PoliceCar("0002 CNP", comisaria, true);
+            PoliceCar policeCar3 = new PoliceCar("0003 CNP", comisaria, false); 
 
             Console.WriteLine(policeCar1.WriteMessage("Created with radar."));
             Console.WriteLine(policeCar2.WriteMessage("Created with radar."));
@@ -31,7 +31,7 @@
             policeCar3.StartPatrolling();
 
             //  usar el radar en el coche de policía sin radar
-            Console.WriteLine("Attempting to use radar on police car without radar.");
+            Console.WriteLine("### Attempting to use radar on police car without radar.");
             policeCar3.UseRadar(city.GetTaxiByPlate("0001 AAA"));
 
        

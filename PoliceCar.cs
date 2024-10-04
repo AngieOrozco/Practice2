@@ -8,42 +8,46 @@
         private const string typeOfVehicle = "Police Car";
         private bool isPatrolling;
         private bool isChasing; //está persiguiendo?
+        private bool hasRadar;
         private Vehicle vehicleBeingChased;
         private PoliceStation police_station;//para que pueda interactuar con la comisaría
         private SpeedRadar speedRadar; //es opcional
 
-        public PoliceCar(string plate, PoliceStation police_station, SpeedRadar radar = null) : base(typeOfVehicle, plate)
+        public PoliceCar(string plate, PoliceStation police_station,bool has_radar ) : base(typeOfVehicle, plate)
         {
             isPatrolling = false;
             isChasing = false;
-            this.speedRadar = radar;
+            speedRadar = new SpeedRadar();
+            hasRadar = has_radar;
             this.police_station = police_station;  // Asignar la referencia a la comisaría
             police_station.Register(this);  // Registrar el coche de policía en la comisaría
         }
 
         public void UseRadar(Vehicle vehicle)
         {
-            if (speedRadar == null)
+            if (hasRadar == false)
             {
                 Console.WriteLine(WriteMessage($"No radar equipped."));
                 return;
             }
-
-            if (isPatrolling)
-            {   
-                speedRadar.TriggerRadar(vehicle);
-                string meassurement = speedRadar.GetLastReading();
-                Console.WriteLine(WriteMessage($"Triggered radar. Result: {meassurement}"));
-                
-                if (vehicle.GetSpeed() > 50.0f) //  límite legal 
-                {
-                    police_station.ActivateAlert(vehicle.GetPlate());  // Activar la alerta en la comisaría, enviando la placa
-                    StartChase(vehicle); // Iniciar persecución si excede la velocidad
-                }
-            }
             else
             {
-                Console.WriteLine(WriteMessage($"has no active radar."));
+                if (isPatrolling)
+                {
+                    speedRadar.TriggerRadar(vehicle);
+                    string meassurement = speedRadar.GetLastReading();
+                    Console.WriteLine(WriteMessage($"Triggered radar. Result: {meassurement}"));
+
+                    if (vehicle.GetSpeed() > 50.0f) //  límite legal 
+                    {
+                        police_station.ActivateAlert(vehicle.GetPlate());  // Activar la alerta en la comisaría, enviando la placa
+                        StartChase(vehicle); // Iniciar persecución si excede la velocidad
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(WriteMessage($"has no active radar."));
+                }
             }
         }
 

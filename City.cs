@@ -45,7 +45,7 @@ namespace Practice2
             }
             else
             {
-                Console.WriteLine($"Taxi con placa {plate} no encontrado.");
+                Console.WriteLine($"Taxi with plate {plate} not found.");
                 return null;
             }
         }
