@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Practice2
+﻿namespace Practice2
 {
-    internal class Scooter
+    class Scooter : Vehicle
     {
+        private static string typeOfVehicle = "Scooter";
+
+        public Scooter() : base(typeOfVehicle, "")
+        {
+            SetSpeed(20.0f);  // velocidad inicial
+        }
+
+        public override string WriteMessage(string message)
+        {
+            return $"{typeOfVehicle}: {message}";
+        }
+
+
     }
 }

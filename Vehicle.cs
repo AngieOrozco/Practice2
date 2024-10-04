@@ -18,8 +18,16 @@ namespace Practice2
 
         public override string ToString()// esto es lo qeu aparecerá cunado hagamos (this)
         {
-            return $"{GetTypeOfVehicle()} with plate {GetPlate()}";
+            if (plate == null || plate == "")
+            {
+                return GetTypeOfVehicle();
+            }
+            else
+            {
+                return GetTypeOfVehicle() + " with plate " + GetPlate();
+            }
         }
+
 
         public string GetTypeOfVehicle()
         {
@@ -43,7 +51,7 @@ namespace Practice2
         }
 
         //Implment interface with Vechicle message structure
-        public string WriteMessage(string message)
+        public virtual string WriteMessage(string message)
         {
             return $"{this}: {message}"; //proporciona su propia versión del método WriteMessage
         }

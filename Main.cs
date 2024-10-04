@@ -1,57 +1,59 @@
-﻿
-namespace Practice2
+﻿namespace Practice2
 {
     internal class Program
-{
-    static void Main()
     {
-        // Crear la ciudad y la comisaría
-        Ciudad ciudad = new Ciudad();
-        PoliceStation comisaria = ciudad.GetComisaria();
+        static void Main()
+        {
+           
+            City city = new City();
+            Console.WriteLine("City created.");
 
-        // Registrar taxis en la ciudad
-        ciudad.RegistrarTaxi("0001 AAA");
-        ciudad.RegistrarTaxi("0002 BBB");
+            PoliceStation comisaria = city.GetPoliceStation();
+            Console.WriteLine("Police station created within the city.");
 
-        // Registrar coches de policía en la comisaría
-        PoliceCar policeCar1 = new PoliceCar("0001 CNP", comisaria);
-        PoliceCar policeCar2 = new PoliceCar("0002 CNP", comisaria);
+            // introducimos taxis a la ciudad
+            city.RegisterTaxi("0001 AAA");
+            city.RegisterTaxi("0002 BBB");
+            city.RegisterTaxi("0003 CCC");
 
-        // Comenzar patrullaje
-        policeCar1.StartPatrolling();
-        policeCar1.UseRadar(ciudad.GetTaxiByPlate("0001 AAA")); // Usar radar con un taxi
+            // introducimos coches de policía (algunos con radar y otros sin radar)
+            PoliceCar policeCar1 = new PoliceCar("0001 CNP", comisaria);
+            PoliceCar policeCar2 = new PoliceCar("0002 CNP", comisaria);
+            PoliceCar policeCar3 = new PoliceCar("0003 CNP", comisaria, null); 
 
-        // Iniciar una carrera con el taxi2
-        Taxi taxi2 = ciudad.GetTaxiByPlate("0002 BBB");
-        taxi2.StartRide();
+            Console.WriteLine(policeCar1.WriteMessage("Created with radar."));
+            Console.WriteLine(policeCar2.WriteMessage("Created with radar."));
+            Console.WriteLine(policeCar3.WriteMessage("Created without radar."));
 
-        // Usar radar sin patrullar
-        policeCar2.UseRadar(taxi2);
+            //se empieza a patrullar
+            policeCar1.StartPatrolling();
+            policeCar2.StartPatrolling();
+            policeCar3.StartPatrolling();
 
-        // Comenzar patrullaje del segundo coche de policía
-        policeCar2.StartPatrolling();
-        policeCar2.UseRadar(taxi2);
+            //  usar el radar en el coche de policía sin radar
+            Console.WriteLine("Attempting to use radar on police car without radar.");
+            policeCar3.UseRadar(city.GetTaxiByPlate("0001 AAA"));
 
-        // El taxi termina su carrera
-        taxi2.StopRide();
-        policeCar2.EndPatrolling();
+       
+            Taxi taxi2 = city.GetTaxiByPlate("0002 BBB");
+            taxi2.StartRide();
 
-        // Iniciar una carrera con el taxi1
-        Taxi taxi1 = ciudad.GetTaxiByPlate("0001 AAA");
-        taxi1.StartRide();
+            policeCar1.UseRadar(taxi2);
 
-        // Patrullaje y uso de radar
-        policeCar1.UseRadar(taxi1);
+            policeCar1.StartChase(taxi2);
 
-        // El taxi termina su carrera
-        taxi1.StopRide();
+            //  comisaría avisa a otros coches patrullando sobre la persecución
+            comisaria.ActivateAlert(taxi2.GetPlate());
 
-        // Terminar patrullaje
-        policeCar1.EndPatrolling();
+            taxi2.StopRide();
 
-        // Imprimir el historial del radar de ambos coches de policía
-        policeCar1.PrintRadarHistory();
-        policeCar2.PrintRadarHistory();
+            //retiramos la licencia
+            city.RegisterTaxi("0002 BBB");
+
+          
+            policeCar1.PrintRadarHistory();
+            policeCar2.PrintRadarHistory();
+            policeCar3.PrintRadarHistory();
+        }
     }
-}
 }

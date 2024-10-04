@@ -10,24 +10,31 @@
         private bool isChasing; //está persiguiendo?
         private Vehicle vehicleBeingChased;
         private PoliceStation police_station;//para que pueda interactuar con la comisaría
-        private SpeedRadar speedRadar;
+        private SpeedRadar speedRadar; //es opcional
 
-        public PoliceCar(string plate, PoliceStation police_station) : base(typeOfVehicle, plate)
+        public PoliceCar(string plate, PoliceStation police_station, SpeedRadar radar = null) : base(typeOfVehicle, plate)
         {
             isPatrolling = false;
             isChasing = false;
-            speedRadar = new SpeedRadar();
+            this.speedRadar = radar;
             this.police_station = police_station;  // Asignar la referencia a la comisaría
             police_station.Register(this);  // Registrar el coche de policía en la comisaría
         }
 
         public void UseRadar(Vehicle vehicle)
         {
-            if (isPatrolling)
+            if (speedRadar == null)
             {
+                Console.WriteLine(WriteMessage($"No radar equipped."));
+                return;
+            }
+
+            if (isPatrolling)
+            {   
                 speedRadar.TriggerRadar(vehicle);
                 string meassurement = speedRadar.GetLastReading();
                 Console.WriteLine(WriteMessage($"Triggered radar. Result: {meassurement}"));
+                
                 if (vehicle.GetSpeed() > 50.0f) //  límite legal 
                 {
                     police_station.ActivateAlert(vehicle.GetPlate());  // Activar la alerta en la comisaría, enviando la placa
@@ -113,13 +120,21 @@
             Console.WriteLine(WriteMessage($"received alert about vehicle with plate {vehiclePlate}."));
         }
 
+
         public void PrintRadarHistory()
         {
+            if (speedRadar == null)
+            {
+                Console.WriteLine(WriteMessage("No radar equipped, cannot print history."));
+                return;
+            }
+
             Console.WriteLine(WriteMessage("Report radar speed history:"));
-            foreach (float speed in speedRadar.SpeedHistory) //foreach
+            foreach (float speed in speedRadar.SpeedHistory) // foreach
             {
                 Console.WriteLine(speed);
             }
         }
+
     }
 }
